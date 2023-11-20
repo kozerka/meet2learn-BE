@@ -1,11 +1,17 @@
-import express from 'express';
+// import express from 'express';
+// import {
+// 	getAllTutors,
+// 	getTutorById,
+// 	updateTutor,
+// } from '../controllers/tutorController.js';
+// import auth from '../middlewares/authMiddleware.js';
 
-const tutorRouter = express.Router();
+// const tutorRouter = express.Router();
 
-tutorRouter.get('/', getAllTutors);
+// tutorRouter.get('/', getAllTutors);
 
-tutorRouter.get('/:tutorId', getTutorById);
+// tutorRouter.get('/:tutorId', getTutorById);
 
-tutorRouter.patch('/update/:tutorId', auth, updateTutor);
+// tutorRouter.patch('/update/:tutorId', auth, updateTutor);
 
-export default tutorRouter;
+// export default tutorRouter;
