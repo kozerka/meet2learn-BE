@@ -1,26 +1,37 @@
-// import express from 'express';
-// import {
-// 	getUsers,
-// 	loginUser,
-// 	registerUser,
-// 	logoutUser,
-// 	updateUser,
-// 	getMe,
-// } from '../controllers/userController.js';
-// import auth from '../middlewares/authMiddleware.js';
+import express from 'express';
+import {
+	getUsers,
+	loginUser,
+	registerUser,
+	logoutUser,
+	updateUser,
+	getMe,
+	deleteUser,
+	changePassword,
+} from '../controllers/userController.js';
+import auth from '../middlewares/authMiddleware.js';
+import {
+	validateLogin,
+	validateNewPassword,
+	validateRegister,
+} from '../middlewares/validationMiddleware.js';
 
-// const userRouter = express.Router();
+const userRouter = express.Router();
 
-// userRouter.get('/', auth, getUsers);
+userRouter.get('/', getUsers);
 
-// userRouter.post('/login', loginUser);
+userRouter.post('/login', validateLogin, loginUser);
 
-// userRouter.post('/register', registerUser);
+userRouter.post('/register', validateRegister, registerUser);
 
-// userRouter.get('/logout', logoutUser);
+userRouter.get('/logout', logoutUser);
 
-// userRouter.patch('/update', auth, updateUser);
+userRouter.patch('/update', auth, updateUser);
 
-// userRouter.get('/me', auth, getMe); //gets single user with token
+userRouter.get('/me', auth, getMe);
 
-// export default userRouter;
+userRouter.delete('/delete', auth, deleteUser);
+
+userRouter.post('/change-password', auth, validateNewPassword, changePassword);
+
+export default userRouter;

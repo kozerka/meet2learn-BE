@@ -16,6 +16,7 @@ import connectDB from './config/db.js';
 // 	reviewRouter,
 // } from './routes/index.js';
 import contactRouter from './routes/contactRouter.js';
+import userRouter from './routes/userRouter.js';
 import { errorHandler, notFound } from './middlewares/errorMiddleware.js';
 dotenv.config();
 
@@ -37,7 +38,7 @@ if (process.env.NODE_ENV === 'development') {
 }
 
 app.use('/api/contact', contactRouter);
-// app.use('/api/users', userRouter);
+app.use('/api/users', userRouter);
 // app.use('/api/posts', postRouter);
 // app.use('/api/meetings', meetingRouter);
 // app.use('/api/meeting-posts', meetingPostRouter);

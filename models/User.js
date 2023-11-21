@@ -1,6 +1,6 @@
 import mongoose from 'mongoose';
 
-const userSchema = new mongoose.Schema(
+const UserSchema = new mongoose.Schema(
 	{
 		name: {
 			type: String,
@@ -18,13 +18,11 @@ const userSchema = new mongoose.Schema(
 		firstName: {
 			type: String,
 			trim: true,
-			required: true,
 			maxLength: 80,
 		},
 		lastName: {
 			type: String,
 			trim: true,
-			required: true,
 			maxLength: 80,
 		},
 		age: { type: Number },
