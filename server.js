@@ -15,6 +15,7 @@ import connectDB from './config/db.js';
 // 	tutorRouter,
 // 	reviewRouter,
 // } from './routes/index.js';
+import contactRouter from './routes/contactRouter.js';
 import { errorHandler, notFound } from './middlewares/errorMiddleware.js';
 dotenv.config();
 
@@ -35,6 +36,7 @@ if (process.env.NODE_ENV === 'development') {
 	app.use(morgan('dev'));
 }
 
+app.use('/api/contact', contactRouter);
 // app.use('/api/users', userRouter);
 // app.use('/api/posts', postRouter);
 // app.use('/api/meetings', meetingRouter);
