@@ -17,6 +17,7 @@ import connectDB from './config/db.js';
 // } from './routes/index.js';
 import contactRouter from './routes/contactRouter.js';
 import userRouter from './routes/userRouter.js';
+import noteRouter from './routes/noteRouter.js';
 import { errorHandler, notFound } from './middlewares/errorMiddleware.js';
 dotenv.config();
 
@@ -42,7 +43,7 @@ app.use('/api/users', userRouter);
 // app.use('/api/posts', postRouter);
 // app.use('/api/meetings', meetingRouter);
 // app.use('/api/meeting-posts', meetingPostRouter);
-// app.use('/api/notes', noteRouter);
+app.use('/api/notes', noteRouter);
 // app.use('/api/comments', commentRouter);
 // app.use('/api/tutors', tutorRouter);
 // app.use('/api/reviews', reviewRouter);

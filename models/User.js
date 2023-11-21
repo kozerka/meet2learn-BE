@@ -1,6 +1,6 @@
 import mongoose from 'mongoose';
 
-const UserSchema = new mongoose.Schema(
+const userSchema = new mongoose.Schema(
 	{
 		name: {
 			type: String,
@@ -28,6 +28,7 @@ const UserSchema = new mongoose.Schema(
 		age: { type: Number },
 		avatar: {
 			type: String,
+			required: true,
 			default:
 				'https://cdn.pixabay.com/photo/2015/10/05/22/37/blank-profile-picture-973460_1280.png',
 		},
@@ -62,4 +63,4 @@ const UserSchema = new mongoose.Schema(
 	{ timestamps: true }
 );
 
-export default mongoose.model('User', UserSchema);
+export default mongoose.model('User', userSchema);

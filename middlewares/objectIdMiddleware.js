@@ -1,4 +1,4 @@
-const mongoose = require('mongoose');
+import mongoose from 'mongoose';
 
 export const objectId = (idToCheck) => (req, res, next) => {
 	if (!mongoose.Types.ObjectId.isValid(req.params[idToCheck]))

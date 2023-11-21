@@ -53,7 +53,7 @@ export const validateRegister = withValidationErrors([
 		.custom(async (email) => {
 			const user = await User.findOne({ email });
 			if (user) {
-				throw new Error('Email already exists');
+				throw new Error('User with this email already exists');
 			}
 		}),
 	body('password')
@@ -117,3 +117,25 @@ export const validateNote = withValidationErrors([
 
 	body('content').notEmpty().withMessage('Content is required'),
 ]);
+
+export const validateNoteUpdate = withValidationErrors([
+	body('title')
+		.optional({ checkFalsy: true })
+		.isLength({ max: 100 })
+		.withMessage('Title must not exceed 100 characters'),
+
+	body('content')
+		.optional({ checkFalsy: true })
+		.isString()
+		.withMessage('Content must be a string'),
+
+	body('tags').optional().isArray().withMessage('Tags must be an array'),
+
+	body().custom((value, { req }) => {
+		if (Object.keys(req.body).length === 0) {
+			throw new Error('At least one field must be provided');
+		}
+		return true;
+	}),
+]);
+
