@@ -5,19 +5,14 @@ import mongoSanitize from 'express-mongo-sanitize';
 import morgan from 'morgan';
 import cookieParser from 'cookie-parser';
 import connectDB from './config/db.js';
-// import {
-// 	userRouter,
-// 	postRouter,
-// 	meetingRouter,
-// 	meetingPostRouter,
-// 	noteRouter,
-// 	commentRouter,
-// 	tutorRouter,
-// 	reviewRouter,
-// } from './routes/index.js';
 import contactRouter from './routes/contactRouter.js';
 import userRouter from './routes/userRouter.js';
 import noteRouter from './routes/noteRouter.js';
+import commentRouter from './routes/commentRouter.js';
+import postRouter from './routes/postRouter.js';
+// import meetingRouter from './routes/meetingRouter.js';
+// import meetingPostRouter from './routes/meetingPostRouter.js';
+
 import { errorHandler, notFound } from './middlewares/errorMiddleware.js';
 dotenv.config();
 
@@ -40,11 +35,11 @@ if (process.env.NODE_ENV === 'development') {
 
 app.use('/api/contact', contactRouter);
 app.use('/api/users', userRouter);
-// app.use('/api/posts', postRouter);
+app.use('/api/posts', postRouter);
 // app.use('/api/meetings', meetingRouter);
 // app.use('/api/meeting-posts', meetingPostRouter);
 app.use('/api/notes', noteRouter);
-// app.use('/api/comments', commentRouter);
+app.use('/api/comments', commentRouter);
 // app.use('/api/tutors', tutorRouter);
 // app.use('/api/reviews', reviewRouter);
 

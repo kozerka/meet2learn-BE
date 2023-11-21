@@ -139,3 +139,13 @@ export const validateNoteUpdate = withValidationErrors([
 	}),
 ]);
 
+
+export const validatePost = withValidationErrors([
+	body('title')
+		.isLength({ min: 3 })
+		.withMessage('Title must be at least 3 characters long'),
+	body('text')
+		.isLength({ min: 5 })
+		.withMessage('Text content must be at least 5 characters long'),
+]);
+

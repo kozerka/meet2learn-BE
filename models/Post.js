@@ -22,7 +22,6 @@ const PostSchema = new mongoose.Schema(
 		category: {
 			type: String,
 			required: true,
-			unique: true,
 			maxLength: 100,
 			enum: [
 				'study buddies',
@@ -76,6 +75,10 @@ const PostSchema = new mongoose.Schema(
 				user: {
 					type: mongoose.Schema.Types.ObjectId,
 					ref: 'User',
+				},
+				count: {
+					type: Number,
+					default: 0,
 				},
 			},
 		],
