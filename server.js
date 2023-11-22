@@ -10,6 +10,8 @@ import userRouter from './routes/userRouter.js';
 import noteRouter from './routes/noteRouter.js';
 import commentRouter from './routes/commentRouter.js';
 import postRouter from './routes/postRouter.js';
+import tutorRouter from './routes/tutorRouter.js';
+// import reviewRouter from './routes/reviewRouter.js';
 // import meetingRouter from './routes/meetingRouter.js';
 // import meetingPostRouter from './routes/meetingPostRouter.js';
 
@@ -40,7 +42,7 @@ app.use('/api/posts', postRouter);
 // app.use('/api/meeting-posts', meetingPostRouter);
 app.use('/api/notes', noteRouter);
 app.use('/api/comments', commentRouter);
-// app.use('/api/tutors', tutorRouter);
+app.use('/api/tutors', tutorRouter);
 // app.use('/api/reviews', reviewRouter);
 
 app.use(notFound);

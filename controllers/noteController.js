@@ -57,17 +57,14 @@ const updateNote = asyncHandler(async (req, res) => {
 		);
 	}
 
-	// Aktualizacja tytułu, jeśli jest dostarczony i nie jest pusty
 	if (req.body.title !== undefined && req.body.title.trim() !== '') {
 		note.title = req.body.title;
 	}
 
-	// Aktualizacja treści, jeśli jest dostarczona i nie jest pusta
 	if (req.body.content !== undefined && req.body.content.trim() !== '') {
 		note.content = req.body.content;
 	}
 
-	// Aktualizacja tagów, jeśli są dostarczone i nie są puste
 	if (
 		req.body.tags !== undefined &&
 		Array.isArray(req.body.tags) &&

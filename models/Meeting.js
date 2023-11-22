@@ -17,6 +17,30 @@ const meetingSchema = new mongoose.Schema(
 			required: true,
 			default: Date.now,
 		},
+		conversation: [
+			{
+				user: {
+					type: mongoose.Schema.Types.ObjectId,
+				},
+				text: {
+					type: String,
+					required: true,
+				},
+				firstName: {
+					type: String,
+				},
+				lastName: {
+					type: String,
+				},
+				avatar: {
+					type: String,
+				},
+				date: {
+					type: Date,
+					default: Date.now,
+				},
+			},
+		],
 	},
 	{ timestamps: true }
 );

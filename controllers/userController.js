@@ -1,5 +1,6 @@
 import asyncHandler from 'express-async-handler';
 import User from '../models/User.js';
+import Tutor from '../models/Tutor.js';
 import generateToken from '../utils/generateToken.js';
 import { comparePassword, hashPassword } from '../utils/hashPasswordHelper.js';
 
@@ -23,7 +24,7 @@ const loginUser = asyncHandler(async (req, res) => {
 });
 //działa
 const registerUser = asyncHandler(async (req, res) => {
-	const { name, email, password } = req.body;
+	const { name, email, password, role, ...tutorFields } = req.body;
 
 	const userExists = await User.findOne({ email });
 	if (userExists) {
@@ -31,19 +32,32 @@ const registerUser = asyncHandler(async (req, res) => {
 		throw new Error('User already exists');
 	}
 	const hashedPassword = await hashPassword(password);
-	const user = await User.create({
-		name,
-		email,
-		password: hashedPassword,
-	});
+	let user;
+	if (role === 'tutor') {
+		user = new Tutor({
+			name,
+			email,
+			password: hashedPassword,
+			role,
+			...tutorFields,
+		});
+	} else {
+		user = new User({
+			name,
+			email,
+			password: hashedPassword,
+			role,
+		});
+	}
+	const createdUser = await user.save();
 
-	if (user) {
-		generateToken(res, user._id);
+	if (createdUser) {
+		generateToken(res, createdUser._id);
 		res.status(201).json({
-			_id: user._id,
-			name: user.name,
-			email: user.email,
-			isAdmin: user.isAdmin,
+			_id: createdUser._id,
+			name: createdUser.name,
+			email: createdUser.email,
+			role: createdUser.role,
 		});
 	} else {
 		res.status(400);
@@ -70,19 +84,28 @@ const getMe = asyncHandler(async (req, res) => {
 const updateUser = asyncHandler(async (req, res) => {
 	const update = req.body;
 	const userId = req.user._id;
-
-	const updatedUser = await User.findByIdAndUpdate(userId, update, {
-		new: true,
-		runValidators: true,
-	});
-
-	if (!updatedUser) {
+	const user = await User.findById(userId);
+	if (!user) {
 		res.status(404);
 		throw new Error('User not found');
 	}
 
-	res.json(updatedUser);
+	if (user.role === 'tutor') {
+		const tutor = await Tutor.findById(userId);
+		if (!tutor) {
+			res.status(404);
+			throw new Error('Tutor not found');
+		}
+		tutor.set(update);
+		const updatedTutor = await tutor.save();
+		res.json(updatedTutor);
+	} else {
+		user.set(update);
+		const updatedUser = await user.save();
+		res.json(updatedUser);
+	}
 });
+
 
 //działa
 const getUsers = asyncHandler(async (req, res) => {

@@ -48,7 +48,7 @@ const userSchema = new mongoose.Schema(
 		role: {
 			type: String,
 			enum: ['student', 'tutor', 'admin'],
-			default: 'student',
+			required: true,
 		},
 		verified: {
 			type: Boolean,
@@ -59,6 +59,7 @@ const userSchema = new mongoose.Schema(
 			required: true,
 			default: false,
 		},
+		meetings: [{ type: mongoose.Types.ObjectId, ref: 'Meeting' }],
 	},
 	{ timestamps: true }
 );
