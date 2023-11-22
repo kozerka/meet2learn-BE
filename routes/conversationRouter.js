@@ -1,22 +1,18 @@
 import express from 'express';
 import {
-	createMeetingPost,
-	getPostsForMeeting,
-	getAllMeetingPosts,
-	updateMeetingPost,
-	deleteMeetingPost,
-} from '../controllers/meetingPostController.js';
+	createConversation,
+	getConversationsForMeeting,
+	getAllConversations,
+	updateConversation,
+	deleteConversation,
+} from '../controllers/converationController.js';
 import auth from '../middlewares/authMiddleware.js';
-const meetingPostRouter = express.Router({ mergeParams: true });
+const conversationRouter = express.Router({ mergeParams: true });
 
-meetingPostRouter.post('/:meetingId/posts', auth, createMeetingPost);
+conversationRouter.post('/:meetingId', auth, createConversation);
+conversationRouter.get('/:meetingId', auth, getConversationsForMeeting);
+conversationRouter.get('/', auth, getAllConversations);
+conversationRouter.put('/:meetingId/:postId', auth, updateConversation);
+conversationRouter.delete('/:meetingId/:postId', auth, deleteConversation);
 
-meetingPostRouter.get('/:meetingId/posts', auth, getPostsForMeeting);
-
-meetingPostRouter.get('/', auth, getAllMeetingPosts);
-
-meetingPostRouter.put('/posts/:postId', auth, updateMeetingPost);
-
-meetingPostRouter.delete('/posts/:postId', auth, deleteMeetingPost);
-
-export default meetingPostRouter;
+export default conversationRouter;

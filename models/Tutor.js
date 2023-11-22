@@ -15,7 +15,6 @@ const tutorSchema = new mongoose.Schema(
 			type: Number,
 			default: 0,
 		},
-		meetings: [{ type: mongoose.Types.ObjectId, ref: 'Meeting' }],
 	},
 	{ timestamps: true }
 );

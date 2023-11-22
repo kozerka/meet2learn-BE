@@ -12,10 +12,9 @@ import commentRouter from './routes/commentRouter.js';
 import postRouter from './routes/postRouter.js';
 import tutorRouter from './routes/tutorRouter.js';
 // import reviewRouter from './routes/reviewRouter.js';
-// import meetingRouter from './routes/meetingRouter.js';
-// import meetingPostRouter from './routes/meetingPostRouter.js';
-
+import meetingRouter from './routes/meetingRouter.js';
 import { errorHandler, notFound } from './middlewares/errorMiddleware.js';
+import conversationRouter from './routes/conversationRouter.js';
 dotenv.config();
 
 const app = express();
@@ -38,8 +37,8 @@ if (process.env.NODE_ENV === 'development') {
 app.use('/api/contact', contactRouter);
 app.use('/api/users', userRouter);
 app.use('/api/posts', postRouter);
-// app.use('/api/meetings', meetingRouter);
-// app.use('/api/meeting-posts', meetingPostRouter);
+app.use('/api/meetings', meetingRouter);
+app.use('/api/conversations', conversationRouter);
 app.use('/api/notes', noteRouter);
 app.use('/api/comments', commentRouter);
 app.use('/api/tutors', tutorRouter);

@@ -10,15 +10,15 @@ import auth from '../middlewares/authMiddleware.js';
 import meetingPostRouter from './conversationRouter.js';
 const meetingRouter = express.Router();
 
-meetingRouter.post('/meetings/create', auth, createMeeting);
+meetingRouter.post('/create', auth, createMeeting);
 
-meetingRouter.get('/meetings', auth, getAllMeetings);
+meetingRouter.get('/', auth, getAllMeetings);
 
-meetingRouter.get('/meetings/:meetingId', auth, getMeetingById);
+meetingRouter.get('/:meetingId', auth, getMeetingById);
 
-meetingRouter.put('/meetings/update/:meetingId', auth, updateMeeting);
+meetingRouter.put('/update/:meetingId', auth, updateMeeting);
 
-meetingRouter.delete('/meetings/delete/:meetingId', auth, deleteMeeting);
+meetingRouter.delete('/delete/:meetingId', auth, deleteMeeting);
 
 meetingRouter.use('/meeting-posts', meetingPostRouter);
 
