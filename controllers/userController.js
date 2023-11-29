@@ -89,6 +89,16 @@ const updateUser = asyncHandler(async (req, res) => {
 		res.status(404);
 		throw new Error('User not found');
 	}
+	if (update.email) {
+		const existingUser = await User.findOne({
+			email: update.email,
+			_id: { $ne: userId },
+		});
+		if (existingUser) {
+			res.status(400);
+			throw new Error('Email already exists!');
+		}
+	}
 
 	if (user.role === 'tutor') {
 		const tutor = await Tutor.findById(userId);
