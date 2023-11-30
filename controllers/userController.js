@@ -153,6 +153,22 @@ const changePassword = asyncHandler(async (req, res) => {
 	res.status(200).json({ message: 'Password changed successfully' });
 });
 
+const uploadAvatar = asyncHandler(async (req, res) => {
+	const userId = req.user._id;
+	const user = await User.findById(userId);
+	if (!user) {
+		res.status(404);
+		throw new Error('User not found');
+	}
+	const userFound = await User.findByIdAndUpdate(
+		userId,
+		{ $set: { avatar: req.file.path } },
+		{ new: true }
+	);
+
+	res.status(200).json({ message: 'Avatar uploaded successfully', userFound });
+});
+
 export {
 	loginUser,
 	registerUser,
@@ -162,4 +178,5 @@ export {
 	getUsers,
 	deleteUser,
 	changePassword,
+	uploadAvatar,
 };

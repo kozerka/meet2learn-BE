@@ -1,4 +1,5 @@
 import express from 'express';
+import multer from 'multer';
 import {
 	loginUser,
 	getUsers,
@@ -8,8 +9,10 @@ import {
 	getMe,
 	deleteUser,
 	changePassword,
+	uploadAvatar,
 } from '../controllers/userController.js';
 import auth from '../middlewares/authMiddleware.js';
+import { storage } from '../utils/fileUpload.js';
 import {
 	validateLogin,
 	validateNewPassword,
@@ -17,6 +20,8 @@ import {
 } from '../middlewares/validationMiddleware.js';
 
 const userRouter = express.Router();
+
+const upload = multer({ storage });
 
 userRouter.get('/', getUsers);
 
@@ -33,5 +38,7 @@ userRouter.get('/me', auth, getMe);
 userRouter.delete('/delete', auth, deleteUser);
 
 userRouter.post('/change-password', auth, validateNewPassword, changePassword);
+
+userRouter.put('/upload-avatar', auth, upload.single('file'), uploadAvatar);
 
 export default userRouter;
