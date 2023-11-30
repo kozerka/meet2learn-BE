@@ -34,3 +34,9 @@
 ### Removed
 
 - MeetingPost model removed - optimization in Meeting model
+
+## [1.0.1] - 2023-11-29
+
+### Fixed
+
+- Removed a problem that may occur when trying to update user data - email address 
