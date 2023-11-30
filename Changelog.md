@@ -40,3 +40,11 @@
 ### Fixed
 
 - Removed a problem that may occur when trying to update user data - email address 
+
+## [1.1.0] - 2023-11-30
+
+### Added
+
+- Config for cloudinary and multer
+- Add routes for uploadAvatar
+- Add controller for upload-avatar route 
