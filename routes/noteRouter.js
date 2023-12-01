@@ -5,6 +5,7 @@ import {
 	getNoteById,
 	deleteNote,
 	updateNote,
+	getUniqueTags,
 } from '../controllers/noteController.js';
 import auth from '../middlewares/authMiddleware.js';
 import { objectId } from '../middlewares/objectIdMiddleware.js';
@@ -18,6 +19,8 @@ const noteRouter = express.Router();
 noteRouter.post('/create', auth, validateNote, createNote);
 
 noteRouter.get('/', auth, getAllNotes);
+
+noteRouter.get('/tags', auth, getUniqueTags);
 
 noteRouter.get('/:id', auth, getNoteById);
 

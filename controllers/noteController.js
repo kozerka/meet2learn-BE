@@ -16,8 +16,41 @@ const createNote = asyncHandler(async (req, res) => {
 });
 
 const getAllNotes = asyncHandler(async (req, res) => {
-	const notes = await Note.find({ user: req.user._id });
-	res.json(notes);
+	const { page = 1, limit = 6, tag } = req.query;
+
+	const query = { user: req.user._id };
+	if (tag) {
+		query.tags = tag;
+	}
+
+	const total = await Note.countDocuments(query);
+	const notes = await Note.find(query)
+		.sort({ _id: -1 })
+		.limit(limit)
+		.skip((page - 1) * limit);
+
+	res.json({
+		total,
+		pages: Math.ceil(total / limit),
+		currentPage: page,
+		notes,
+	});
+});
+
+const getUniqueTags = asyncHandler(async (req, res) => {
+	try {
+		const result = await Note.aggregate([
+			{ $match: { user: req.user._id } },
+			{ $unwind: '$tags' },
+			{ $group: { _id: '$tags' } },
+			{ $project: { _id: 0, tag: '$_id' } },
+		]);
+
+		const tags = result.map((t) => t.tag);
+		res.json(tags);
+	} catch (error) {
+		res.status(500).send({ message: error.message });
+	}
 });
 
 const getNoteById = asyncHandler(async (req, res) => {
@@ -73,4 +106,11 @@ const updateNote = asyncHandler(async (req, res) => {
 	res.json(updatedNote);
 });
 
-export { createNote, getAllNotes, getNoteById, deleteNote, updateNote };
+export {
+	createNote,
+	getAllNotes,
+	getNoteById,
+	deleteNote,
+	updateNote,
+	getUniqueTags,
+};
