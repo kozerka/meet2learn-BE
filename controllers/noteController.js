@@ -65,11 +65,7 @@ const updateNote = asyncHandler(async (req, res) => {
 		note.content = req.body.content;
 	}
 
-	if (
-		req.body.tags !== undefined &&
-		Array.isArray(req.body.tags) &&
-		req.body.tags.length > 0
-	) {
+	if (req.body.tags !== undefined && Array.isArray(req.body.tags)) {
 		note.tags = req.body.tags;
 	}
 
@@ -77,60 +73,4 @@ const updateNote = asyncHandler(async (req, res) => {
 	res.json(updatedNote);
 });
 
-const addTagsToNote = asyncHandler(async (req, res) => {
-	const note = await Note.findById(req.params.id);
-
-	if (!note) {
-		res.status(404);
-		throw new Error('Note not found');
-	}
-	const newTags = req.body.tags;
-	note.tags = [...new Set([...note.tags, ...newTags])];
-	const updatedNote = await note.save();
-	res.json(updatedNote);
-});
-
-const removeTagsFromNote = asyncHandler(async (req, res) => {
-	const note = await Note.findById(req.params.id);
-
-	if (!note) {
-		res.status(404);
-		throw new Error('Note not found');
-	}
-
-	const tagsToRemove = req.body.tags;
-	note.tags = note.tags.filter((tag) => !tagsToRemove.includes(tag));
-
-	const updatedNote = await note.save();
-	res.json(updatedNote);
-});
-
-const editTagsOfNote = asyncHandler(async (req, res) => {
-	const note = await Note.findById(req.params.id);
-	const { oldTag, newTag } = req.body;
-
-	if (!note) {
-		res.status(404);
-		throw new Error('Note not found');
-	}
-
-	const tagIndex = note.tags.findIndex((tag) => tag === oldTag);
-	if (tagIndex === -1) {
-		res.status(404);
-		throw new Error('Tag not found');
-	}
-	note.tags[tagIndex] = newTag;
-	const updatedNote = await note.save();
-	res.json(updatedNote);
-});
-
-export {
-	createNote,
-	getAllNotes,
-	getNoteById,
-	deleteNote,
-	updateNote,
-	addTagsToNote,
-	removeTagsFromNote,
-	editTagsOfNote,
-};
+export { createNote, getAllNotes, getNoteById, deleteNote, updateNote };

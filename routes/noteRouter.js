@@ -5,9 +5,6 @@ import {
 	getNoteById,
 	deleteNote,
 	updateNote,
-	addTagsToNote,
-	removeTagsFromNote,
-	editTagsOfNote,
 } from '../controllers/noteController.js';
 import auth from '../middlewares/authMiddleware.js';
 import { objectId } from '../middlewares/objectIdMiddleware.js';
@@ -33,11 +30,5 @@ noteRouter.patch(
 	validateNoteUpdate,
 	updateNote
 );
-
-noteRouter.put('/:id/tags', auth, objectId('id'), addTagsToNote);
-
-noteRouter.delete('/:id/tags', auth, objectId('id'), removeTagsFromNote);
-
-noteRouter.patch('/:id/tags', auth, objectId('id'), editTagsOfNote);
 
 export default noteRouter;
