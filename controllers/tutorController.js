@@ -1,35 +1,52 @@
 import asyncHandler from 'express-async-handler';
+import User from '../models/User.js';
 
-import Tutor from '../models/Tutor.js';
 const getAllTutors = asyncHandler(async (req, res) => {
-	const { firstName, lastName, subjects, page = 1, limit = 9 } = req.query;
-	let query = {};
-	if (firstName) {
-		query.firstName = { $regex: firstName, $options: 'i' };
+	try {
+		const { firstName, lastName, subject, page = 1, limit = 6 } = req.query;
+
+		let queryObject = { role: 'tutor' };
+		if (firstName) {
+			queryObject['firstName'] = new RegExp(firstName, 'i');
+		}
+		if (lastName) {
+			queryObject['lastName'] = new RegExp(lastName, 'i');
+		}
+		if (subject) {
+			queryObject['subjects.name'] = new RegExp(subject, 'i');
+		}
+
+		const startIndex = (page - 1) * limit;
+		const total = await User.countDocuments(queryObject);
+
+		const tutors = await User.find(queryObject)
+			.select('-password')
+			.limit(limit * 1)
+			.skip(startIndex);
+
+		res.json({
+			total,
+			totalPages: Math.ceil(total / limit),
+			currentPage: page,
+			tutors,
+		});
+	} catch (error) {
+		res.status(500).json({ message: error.message });
 	}
-	if (lastName) {
-		query.lastName = { $regex: lastName, $options: 'i' };
-	}
-	if (subjects) {
-		query.subjects = { $in: subjects.split(',') };
-	}
-	const skip = (page - 1) * limit;
-	const tutors = await Tutor.find(query).limit(limit).skip(skip);
-	res.json(tutors);
 });
 
 const getTutorById = asyncHandler(async (req, res) => {
-	const tutorId = req.params.id;
-	console.log('Requested tutor ID:', tutorId);
-
-	const tutor = await Tutor.findById(tutorId);
+	const tutor = await User.findOne({
+		_id: req.params.id,
+		role: 'tutor',
+	}).select('-password');
 	console.log('Tutor found:', tutor);
 	if (!tutor) {
 		res.status(404);
 		throw new Error('Tutor not found');
+	} else {
+		res.json(tutors);
 	}
-
-	res.json(tutor);
 });
 
 export { getAllTutors, getTutorById };
