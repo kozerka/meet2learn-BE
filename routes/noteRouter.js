@@ -5,9 +5,7 @@ import {
 	getNoteById,
 	deleteNote,
 	updateNote,
-	addTagsToNote,
-	removeTagsFromNote,
-	editTagsOfNote,
+	getUniqueTags,
 } from '../controllers/noteController.js';
 import auth from '../middlewares/authMiddleware.js';
 import { objectId } from '../middlewares/objectIdMiddleware.js';
@@ -22,6 +20,8 @@ noteRouter.post('/create', auth, validateNote, createNote);
 
 noteRouter.get('/', auth, getAllNotes);
 
+noteRouter.get('/tags', auth, getUniqueTags);
+
 noteRouter.get('/:id', auth, getNoteById);
 
 noteRouter.delete('/:id', auth, objectId('id'), deleteNote);
@@ -33,11 +33,5 @@ noteRouter.patch(
 	validateNoteUpdate,
 	updateNote
 );
-
-noteRouter.put('/:id/tags', auth, objectId('id'), addTagsToNote);
-
-noteRouter.delete('/:id/tags', auth, objectId('id'), removeTagsFromNote);
-
-noteRouter.patch('/:id/tags', auth, objectId('id'), editTagsOfNote);
 
 export default noteRouter;

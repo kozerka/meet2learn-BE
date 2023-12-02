@@ -16,8 +16,41 @@ const createNote = asyncHandler(async (req, res) => {
 });
 
 const getAllNotes = asyncHandler(async (req, res) => {
-	const notes = await Note.find({ user: req.user._id });
-	res.json(notes);
+	const { page = 1, limit = 6, tag } = req.query;
+
+	const query = { user: req.user._id };
+	if (tag) {
+		query.tags = tag;
+	}
+
+	const total = await Note.countDocuments(query);
+	const notes = await Note.find(query)
+		.sort({ _id: -1 })
+		.limit(limit)
+		.skip((page - 1) * limit);
+
+	res.json({
+		total,
+		pages: Math.ceil(total / limit),
+		currentPage: page,
+		notes,
+	});
+});
+
+const getUniqueTags = asyncHandler(async (req, res) => {
+	try {
+		const result = await Note.aggregate([
+			{ $match: { user: req.user._id } },
+			{ $unwind: '$tags' },
+			{ $group: { _id: '$tags' } },
+			{ $project: { _id: 0, tag: '$_id' } },
+		]);
+
+		const tags = result.map((t) => t.tag);
+		res.json(tags);
+	} catch (error) {
+		res.status(500).send({ message: error.message });
+	}
 });
 
 const getNoteById = asyncHandler(async (req, res) => {
@@ -65,61 +98,10 @@ const updateNote = asyncHandler(async (req, res) => {
 		note.content = req.body.content;
 	}
 
-	if (
-		req.body.tags !== undefined &&
-		Array.isArray(req.body.tags) &&
-		req.body.tags.length > 0
-	) {
+	if (req.body.tags !== undefined && Array.isArray(req.body.tags)) {
 		note.tags = req.body.tags;
 	}
 
-	const updatedNote = await note.save();
-	res.json(updatedNote);
-});
-
-const addTagsToNote = asyncHandler(async (req, res) => {
-	const note = await Note.findById(req.params.id);
-
-	if (!note) {
-		res.status(404);
-		throw new Error('Note not found');
-	}
-	const newTags = req.body.tags;
-	note.tags = [...new Set([...note.tags, ...newTags])];
-	const updatedNote = await note.save();
-	res.json(updatedNote);
-});
-
-const removeTagsFromNote = asyncHandler(async (req, res) => {
-	const note = await Note.findById(req.params.id);
-
-	if (!note) {
-		res.status(404);
-		throw new Error('Note not found');
-	}
-
-	const tagsToRemove = req.body.tags;
-	note.tags = note.tags.filter((tag) => !tagsToRemove.includes(tag));
-
-	const updatedNote = await note.save();
-	res.json(updatedNote);
-});
-
-const editTagsOfNote = asyncHandler(async (req, res) => {
-	const note = await Note.findById(req.params.id);
-	const { oldTag, newTag } = req.body;
-
-	if (!note) {
-		res.status(404);
-		throw new Error('Note not found');
-	}
-
-	const tagIndex = note.tags.findIndex((tag) => tag === oldTag);
-	if (tagIndex === -1) {
-		res.status(404);
-		throw new Error('Tag not found');
-	}
-	note.tags[tagIndex] = newTag;
 	const updatedNote = await note.save();
 	res.json(updatedNote);
 });
@@ -130,7 +112,5 @@ export {
 	getNoteById,
 	deleteNote,
 	updateNote,
-	addTagsToNote,
-	removeTagsFromNote,
-	editTagsOfNote,
+	getUniqueTags,
 };

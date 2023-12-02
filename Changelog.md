@@ -48,3 +48,14 @@
 - Config for cloudinary and multer
 - Add routes for uploadAvatar
 - Add controller for upload-avatar route 
+
+## [1.2.0] - 2023-12-01
+
+### Added
+
+- Filtering notes by tags
+- Pagination form notes
+
+### Removed
+
+- Unnecessary paths and actions for tag handling
