@@ -3,17 +3,15 @@ import User from '../models/User.js';
 
 const getAllTutors = asyncHandler(async (req, res) => {
 	try {
-		const { firstName, lastName, subject, page = 1, limit = 6 } = req.query;
+		const { search, page = 1, limit = 6 } = req.query;
 
 		let queryObject = { role: 'tutor' };
-		if (firstName) {
-			queryObject['firstName'] = new RegExp(firstName, 'i');
-		}
-		if (lastName) {
-			queryObject['lastName'] = new RegExp(lastName, 'i');
-		}
-		if (subject) {
-			queryObject['subjects.name'] = new RegExp(subject, 'i');
+		if (search) {
+			queryObject['$or'] = [
+				{ firstName: new RegExp(search, 'i') },
+				{ lastName: new RegExp(search, 'i') },
+				{ 'subjects.name': new RegExp(search, 'i') },
+			];
 		}
 
 		const startIndex = (page - 1) * limit;
@@ -36,17 +34,20 @@ const getAllTutors = asyncHandler(async (req, res) => {
 });
 
 const getTutorById = asyncHandler(async (req, res) => {
+	const tutorId = req.params.id;
+
 	const tutor = await User.findOne({
-		_id: req.params.id,
+		_id: tutorId,
 		role: 'tutor',
 	}).select('-password');
-	console.log('Tutor found:', tutor);
+
 	if (!tutor) {
 		res.status(404);
 		throw new Error('Tutor not found');
 	} else {
-		res.json(tutors);
+		res.json(tutor);
 	}
 });
+
 
 export { getAllTutors, getTutorById };
