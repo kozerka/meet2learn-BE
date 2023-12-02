@@ -59,3 +59,9 @@
 ### Removed
 
 - Unnecessary paths and actions for tag handling
+
+## [1.3.0] - 2023-12-02
+
+### Changed
+
+ - Method of getting tutors - pagination and filtering added
