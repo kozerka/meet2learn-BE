@@ -93,7 +93,7 @@ const deleteMeeting = asyncHandler(async (req, res) => {
 	const meetingId = req.params.meetingId;
 	const userId = req.user._id;
 
-	const meeting = await Meeting.findById(meetingId);
+	const meeting = await Meeting.findOneAndDelete(meetingId);
 
 	if (!meeting) {
 		res.status(404);
@@ -101,15 +101,14 @@ const deleteMeeting = asyncHandler(async (req, res) => {
 	}
 
 	if (
-		meeting.tutor._id.toString() !== userId &&
-		meeting.student._id.toString() !== userId
+		meeting.tutor._id.toString() === userId.toString() ||
+		meeting.student._id.toString() === userId.toString()
 	) {
+		res.json({ message: 'Meeting deleted' });
+	} else {
 		res.status(403);
 		throw new Error('Not authorized to delete this meeting');
 	}
-
-	await meeting.remove();
-	res.json({ message: 'Meeting deleted' });
 });
 
 

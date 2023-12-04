@@ -14,8 +14,8 @@ const createConversation = asyncHandler(async (req, res) => {
 	}
 
 	if (
-		meeting.tutor.toString() !== userId &&
-		meeting.student.toString() !== userId
+		meeting.tutor.toString() !== userId.toString() &&
+		meeting.student.toString() !== userId.toString()
 	) {
 		res.status(403);
 		throw new Error('Not authorized to add conversation to this meeting');
@@ -50,8 +50,8 @@ const getConversationsForMeeting = asyncHandler(async (req, res) => {
 	}
 
 	if (
-		meeting.tutor.toString() !== userId &&
-		meeting.student.toString() !== userId
+		meeting.tutor.toString() !== userId.toString() &&
+		meeting.student.toString() !== userId.toString()
 	) {
 		res.status(403);
 		throw new Error('Not authorized to view conversations for this meeting');
@@ -87,7 +87,7 @@ const updateConversation = asyncHandler(async (req, res) => {
 		throw new Error('Conversation post not found');
 	}
 
-	if (post.user.toString() !== userId) {
+	if (post.user.toString() !== userId.toString()) {
 		res.status(401);
 		throw new Error('User not authorized to update this conversation post');
 	}
@@ -103,30 +103,27 @@ const deleteConversation = asyncHandler(async (req, res) => {
 	const postId = req.params.postId;
 	const userId = req.user._id;
 
+	// Znajdź spotkanie
 	const meeting = await Meeting.findById(meetingId);
 	if (!meeting) {
 		res.status(404);
 		throw new Error('Meeting not found');
 	}
-
 	const post = meeting.conversation.id(postId);
 	if (!post) {
 		res.status(404);
 		throw new Error('Conversation post not found');
 	}
 
-	if (post.user.toString() !== userId) {
+	if (post.user.toString() !== userId.toString()) {
 		res.status(401);
 		throw new Error('User not authorized to delete this conversation post');
 	}
-
-	post.remove();
+	meeting.conversation.pull({ _id: postId });
 	await meeting.save();
 
 	res.json({ message: 'Conversation post deleted' });
 });
-
-
 
 export {
 	createConversation,
