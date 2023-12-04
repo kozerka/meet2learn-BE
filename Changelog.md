@@ -65,3 +65,9 @@
 ### Changed
 
  - Method of getting tutors - pagination and filtering added
+
+## [1.3.1] - 2023-12-04
+
+### Fixed
+
+ - Change redundant method for mongoose and spellings mistakes
