@@ -71,3 +71,17 @@
 ### Fixed
 
  - Change redundant method for mongoose and spellings mistakes
+
+ ## [1.4.0] - 2023-12-06
+
+### Added
+
+ - Add routes for post categories, separated category names into constant variables
+ - Add filtering by categories to posts
+
+### Fixed
+
+ - Correct way of fetching user data into other models using populate
+
+### Changed
+### Removed
