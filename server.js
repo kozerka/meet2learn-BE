@@ -15,6 +15,7 @@ import {
 	commentRouter,
 	tutorRouter,
 	reviewRouter,
+	statsRouter,
 } from './routes/index.js';
 import { errorHandler, notFound } from './middlewares/errorMiddleware.js';
 import { getPostCategories } from './controllers/categoriesController.js';
@@ -50,6 +51,7 @@ app.use('/api/notes', noteRouter);
 app.use('/api/comments', commentRouter);
 app.use('/api/tutors', tutorRouter);
 app.use('/api/reviews', reviewRouter);
+app.use('/api/stats', statsRouter);
 app.use('/api/categories', getPostCategories);
 
 app.use(notFound);

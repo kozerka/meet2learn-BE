@@ -7,3 +7,4 @@ export { default as userRouter } from './userRouter.js';
 export { default as reviewRouter } from './reviewRouter.js';
 export { default as tutorRouter } from './tutorRouter.js';
 export { default as contactRouter } from './contactRouter.js';
+export { default as statsRouter } from './statsRouter.js';
