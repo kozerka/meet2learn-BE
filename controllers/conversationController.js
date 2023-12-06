@@ -24,9 +24,6 @@ const createConversation = asyncHandler(async (req, res) => {
 	const newConversation = {
 		user: userId,
 		text,
-		firstName: req.user.firstName,
-		lastName: req.user.lastName,
-		avatar: req.user.avatar,
 		date: new Date(),
 	};
 
@@ -41,7 +38,8 @@ const getConversationsForMeeting = asyncHandler(async (req, res) => {
 	const userId = req.user._id;
 
 	const meeting = await Meeting.findById(meetingId).populate(
-		'conversation.user'
+		'conversation.user',
+		'firstName lastName avatar'
 	);
 
 	if (!meeting) {
@@ -103,7 +101,6 @@ const deleteConversation = asyncHandler(async (req, res) => {
 	const postId = req.params.postId;
 	const userId = req.user._id;
 
-	// Znajdź spotkanie
 	const meeting = await Meeting.findById(meetingId);
 	if (!meeting) {
 		res.status(404);

@@ -14,8 +14,7 @@ const createComment = asyncHandler(async (req, res) => {
 	const newComment = {
 		user: req.user._id,
 		text,
-		firstName: req.user.firstName,
-		lastName: req.user.lastName,
+		name: req.user.name,
 		avatar: req.user.avatar,
 	};
 
@@ -53,5 +52,6 @@ const deleteComment = asyncHandler(async (req, res) => {
 	await post.save();
 	res.json({ message: 'Comment deleted' });
 });
+
 
 export { createComment, deleteComment };
