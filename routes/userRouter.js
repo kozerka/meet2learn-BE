@@ -10,6 +10,8 @@ import {
 	deleteUser,
 	changePassword,
 	uploadAvatar,
+	resetPasswordFinalize,
+	resetPasswordInitiate,
 } from '../controllers/userController.js';
 import auth from '../middlewares/authMiddleware.js';
 import { storage } from '../utils/fileUpload.js';
@@ -40,5 +42,12 @@ userRouter.delete('/delete', auth, deleteUser);
 userRouter.post('/change-password', auth, validateNewPassword, changePassword);
 
 userRouter.put('/upload-avatar', auth, upload.single('file'), uploadAvatar);
+
+userRouter.post('/reset-password-initiate', resetPasswordInitiate);
+
+userRouter.post('/reset-password-finalize', resetPasswordFinalize);
+
+
+
 
 export default userRouter;

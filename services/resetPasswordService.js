@@ -1,5 +1,5 @@
 import createTransporter from '../config/mailTransporter.js';
-import { resetPasswordTemplate } from '../templates/resetPasswordTemplate.js';
+import resetPasswordTemplate from '../templates/resetPasswordTemplate.js';
 export const resetPasswordService = async (email, token) => {
 	const transporter = createTransporter();
 	const htmlContent = resetPasswordTemplate(email, token);
