@@ -5,6 +5,7 @@ import generateToken from '../utils/generateToken.js';
 import generatePasswordResetToken from '../utils/generatePasswordResetToken.js';
 import { comparePassword, hashPassword } from '../utils/hashPasswordHelper.js';
 import { resetPasswordService } from '../services/resetPasswordService.js';
+import { registerGreetingService } from '../services/registerGreetingService.js';
 import jwt from 'jsonwebtoken';
 //działa
 const loginUser = asyncHandler(async (req, res) => {
@@ -55,6 +56,7 @@ const registerUser = asyncHandler(async (req, res) => {
 	const createdUser = await user.save();
 
 	if (createdUser) {
+		await registerGreetingService(createdUser.email, createdUser.name);
 		generateToken(res, createdUser._id);
 		res.status(201).json({
 			_id: createdUser._id,
