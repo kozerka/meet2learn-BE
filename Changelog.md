@@ -85,3 +85,18 @@
 
 ### Changed
 ### Removed
+
+ ## [1.5.0] - 2023-12-12
+
+### Added
+
+ - Reset Password template for mailService
+ - Greeting template
+ - Routes and controllers made for reset password functionality 
+
+### Changed
+ - Updated email template for mailService (contact form)
+
+
+
+
