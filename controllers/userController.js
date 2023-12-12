@@ -2,8 +2,11 @@ import asyncHandler from 'express-async-handler';
 import User from '../models/User.js';
 import Tutor from '../models/Tutor.js';
 import generateToken from '../utils/generateToken.js';
+import generatePasswordResetToken from '../utils/generatePasswordResetToken.js';
 import { comparePassword, hashPassword } from '../utils/hashPasswordHelper.js';
-
+import { resetPasswordService } from '../services/resetPasswordService.js';
+import { registerGreetingService } from '../services/registerGreetingService.js';
+import jwt from 'jsonwebtoken';
 //działa
 const loginUser = asyncHandler(async (req, res) => {
 	const { email, password } = req.body;
@@ -53,6 +56,7 @@ const registerUser = asyncHandler(async (req, res) => {
 	const createdUser = await user.save();
 
 	if (createdUser) {
+		await registerGreetingService(createdUser.email, createdUser.name);
 		generateToken(res, createdUser._id);
 		res.status(201).json({
 			_id: createdUser._id,
@@ -117,7 +121,6 @@ const updateUser = asyncHandler(async (req, res) => {
 	}
 });
 
-
 //działa
 const getUsers = asyncHandler(async (req, res) => {
 	const users = await User.find({});
@@ -170,6 +173,53 @@ const uploadAvatar = asyncHandler(async (req, res) => {
 	res.status(200).json({ message: 'Avatar uploaded successfully', userFound });
 });
 
+const resetPasswordInitiate = asyncHandler(async (req, res) => {
+	const { email } = req.body;
+	const user = await User.findOne({ email });
+
+	if (!user) {
+		res.status(404);
+		throw new Error('User not found');
+	}
+
+	const token = generatePasswordResetToken(user._id);
+	await resetPasswordService(email, token);
+	res.send('Password reset link has been sent.');
+});
+
+const resetPasswordFinalize = asyncHandler(async (req, res) => {
+	const { token, newPassword } = req.body;
+
+	try {
+		const decoded = jwt.verify(token, process.env.JWT_SECRET);
+		const userId = decoded.userId;
+		const user = await User.findById(userId);
+
+		if (!user) {
+			res.status(404);
+			throw new Error('Invalid token or user does not exist');
+		}
+
+		user.password = await hashPassword(newPassword);
+		await user.save();
+		res.send('Password has been reset successfully.');
+	} catch (error) {
+		console.error('Error resetting password:', error);
+
+		let errorMessage = 'Error occurred during password reset';
+		if (error instanceof jwt.JsonWebTokenError) {
+			if (error.message === 'jwt expired') {
+				errorMessage =
+					'Token has expired. Please initiate the password reset process again.';
+			} else {
+				errorMessage = error.message;
+			}
+		}
+
+		res.status(400).json({ message: errorMessage });
+	}
+});
+
 export {
 	loginUser,
 	registerUser,
@@ -180,4 +230,6 @@ export {
 	deleteUser,
 	changePassword,
 	uploadAvatar,
+	resetPasswordInitiate,
+	resetPasswordFinalize,
 };
