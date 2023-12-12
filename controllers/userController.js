@@ -178,6 +178,7 @@ const resetPasswordInitiate = asyncHandler(async (req, res) => {
 	const user = await User.findOne({ email });
 
 	if (!user) {
+		res.status(404);
 		throw new Error('User not found');
 	}
 
@@ -195,6 +196,7 @@ const resetPasswordFinalize = asyncHandler(async (req, res) => {
 		const user = await User.findById(userId);
 
 		if (!user) {
+			res.status(404);
 			throw new Error('Invalid token or user does not exist');
 		}
 
@@ -203,7 +205,18 @@ const resetPasswordFinalize = asyncHandler(async (req, res) => {
 		res.send('Password has been reset successfully.');
 	} catch (error) {
 		console.error('Error resetting password:', error);
-		res.status(400).send(error.message || 'Invalid or expired token');
+
+		let errorMessage = 'Error occurred during password reset';
+		if (error instanceof jwt.JsonWebTokenError) {
+			if (error.message === 'jwt expired') {
+				errorMessage =
+					'Token has expired. Please initiate the password reset process again.';
+			} else {
+				errorMessage = error.message;
+			}
+		}
+
+		res.status(400).json({ message: errorMessage });
 	}
 });
 
