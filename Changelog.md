@@ -98,5 +98,10 @@
  - Updated email template for mailService (contact form)
 
 
+ ## [1.5.1] - 2023-12-13
 
+### Fixed
 
+- Improved tutor rating display - one decimal place
+- Displaying statistics about meetings for all logged in users not for students only
+- Token generation only when logging in, removing generation upon registration to prevent saving in cookies
