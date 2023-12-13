@@ -19,8 +19,13 @@ export const getStats = asyncHandler(async (req, res) => {
 
 	const postsCount = await Post.countDocuments({ user: userId });
 	const notesCount = await Note.countDocuments({ user: userId });
-	const meetingsCount = await Meeting.countDocuments({ student: userId });
-	const reviewsCount = await Review.countDocuments({ student: userId });
+	const meetingsCount = await Meeting.countDocuments({
+		$or: [{ student: userId }, { tutor: userId }],
+	});
+
+	const reviewsCount = await Review.countDocuments({
+		$or: [{ student: userId }, { tutor: userId }],
+	});
 
 	let likesCount = 0;
 	let dislikesCount = 0;

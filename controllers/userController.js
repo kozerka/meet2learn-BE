@@ -7,7 +7,7 @@ import { comparePassword, hashPassword } from '../utils/hashPasswordHelper.js';
 import { resetPasswordService } from '../services/resetPasswordService.js';
 import { registerGreetingService } from '../services/registerGreetingService.js';
 import jwt from 'jsonwebtoken';
-//działa
+
 const loginUser = asyncHandler(async (req, res) => {
 	const { email, password } = req.body;
 
@@ -26,7 +26,7 @@ const loginUser = asyncHandler(async (req, res) => {
 		throw new Error('Invalid email or password');
 	}
 });
-//działa
+
 const registerUser = asyncHandler(async (req, res) => {
 	const { name, email, password, role, ...tutorFields } = req.body;
 
@@ -57,7 +57,6 @@ const registerUser = asyncHandler(async (req, res) => {
 
 	if (createdUser) {
 		await registerGreetingService(createdUser.email, createdUser.name);
-		generateToken(res, createdUser._id);
 		res.status(201).json({
 			_id: createdUser._id,
 			name: createdUser.name,
@@ -69,7 +68,7 @@ const registerUser = asyncHandler(async (req, res) => {
 		throw new Error('Invalid user data');
 	}
 });
-//działa
+
 const logoutUser = (req, res) => {
 	res.cookie('jwt', 'logout', {
 		httpOnly: true,
@@ -77,7 +76,7 @@ const logoutUser = (req, res) => {
 	});
 	res.status(200).json({ message: 'Logged out successfully!See you soon!' });
 };
-//działa
+
 const getMe = asyncHandler(async (req, res) => {
 	const user = await User.findById(req.user._id).select('-password');
 	if (!user) {
@@ -121,13 +120,11 @@ const updateUser = asyncHandler(async (req, res) => {
 	}
 });
 
-//działa
 const getUsers = asyncHandler(async (req, res) => {
 	const users = await User.find({});
 	res.json(users);
 });
 
-//działające
 const deleteUser = asyncHandler(async (req, res) => {
 	const userId = req.user._id;
 	const result = await User.deleteOne({ _id: userId });
@@ -137,7 +134,7 @@ const deleteUser = asyncHandler(async (req, res) => {
 	}
 	res.json({ message: 'User removed' });
 });
-//działa
+
 const changePassword = asyncHandler(async (req, res) => {
 	const userId = req.user._id;
 	const { currentPassword, newPassword } = req.body;
