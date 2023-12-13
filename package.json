@@ -1,6 +1,6 @@
 {
 	"name": "meet2learn-be",
-	"version": "1.5.0",
+	"version": "1.5.1",
 	"description": "backend for meet2learn app",
 	"main": "server.js",
 	"type": "module",
