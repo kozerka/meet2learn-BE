@@ -2,7 +2,7 @@ import jwt from 'jsonwebtoken';
 
 const generatePasswordResetToken = (userId) => {
 	return jwt.sign({ userId }, process.env.JWT_SECRET, {
-		expiresIn: '15m',
+		expiresIn: process.env.JWT_FOR_RESET_EXPIRES_IN || '15m',
 	});
 };
 
