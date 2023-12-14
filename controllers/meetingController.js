@@ -21,14 +21,17 @@ const createMeeting = asyncHandler(async (req, res) => {
 });
 
 const getAllMeetings = asyncHandler(async (req, res) => {
-	const userId = req.user._id; // ID zalogowanego użytkownika
-
-	// Pobranie wszystkich spotkań, w których użytkownik jest studentem lub tutorem
+	const userId = req.user._id;
 	const meetings = await Meeting.find({
-		$or: [{ tutor: userId }, { student: userId }],
+		$or: [
+			{ tutor: userId, student: userId },
+			{ student: userId },
+			{ tutor: userId },
+		],
 	})
 		.populate('tutor')
 		.populate('student');
+
 
 	res.json(meetings);
 });
