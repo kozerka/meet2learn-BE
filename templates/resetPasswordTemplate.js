@@ -1,5 +1,5 @@
 const resetPasswordTemplate = (email, token) => {
-	const resetLink = `http://localhost:3000/finalize-reset-password?token=${token}`;
+	const resetLink = `http://meet2learn.netlify.app/finalize-reset-password?token=${token}`;
 	const now = new Date();
 	const dateString = `${now.toLocaleDateString()} at ${now.toLocaleTimeString()}`;
 
