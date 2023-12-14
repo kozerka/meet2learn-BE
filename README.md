@@ -108,7 +108,7 @@ To use all BE functionalities on the FE, remember to download the FE from the li
    ```
 
 4. **Set up environment variables:**
-- Create a `.env` file in the project root.
+- Create a `.env` file in the project root. You can use the .env.example - change name to .env 
 - Add the necessary environment variables (e.g., database URI, JWT secret).
     ```
     DB_USER=YOUR_USER_NAME
@@ -118,7 +118,7 @@ To use all BE functionalities on the FE, remember to download the FE from the li
     NODE_ENV=development
     PORT=4000(PORT ACCORDING YOUR PREFERENCES)
     JWT_SECRET=SECRET_TOKEN
-    JWT_EXPIRES_IN=PREFERRED_TIME
+    JWT_EXPIRES_IN=ADD_EXPIRE_TIME
     NODEMAILER_PASS=YOUR_NODEMAILER_PASSWORD
     NODEMAILER_EMAIL=YOUR_NODEMAILER_EMAIL
 
