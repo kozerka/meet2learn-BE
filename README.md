@@ -1,16 +1,15 @@
 ## meet2learn Backend (meet2learn-BE)
 ![Language](https://img.shields.io/badge/language-EN-red)
 
-## Overview
+## 📖 Overview
 This is the backend part of the meet2learn application, a dynamic web platform that offers a rich set of features including user registration, post management, commenting, profile management, and more, complementing the frontend React application.  [go to FE repository](https://github.com/kozerka/meet2learn-FE)
 
-## Live 
+## 🌍 Live
 
-[meet2learn - live preview](https://github.com/kozerka/meet2learn-FE)
+To check all the features please register. If you want to be able to control your account please provide VALID email! All dummy email will be deleted from DataBase after 10 days ->
+[meet2learn LIVE](https://meet2learn.netlify.app/)
 
-
-
-## Technology Stack
+## 💻 Technology Stack
 
  ![NODE JS](https://img.shields.io/badge/Node.js-339933.svg?style=for-the-badge&logo=nodedotjs&logoColor=white)
  ![NODEMON](https://img.shields.io/badge/Nodemon-76D04B.svg?style=for-the-badge&logo=Nodemon&logoColor=white)
@@ -26,9 +25,8 @@ This is the backend part of the meet2learn application, a dynamic web platform t
 - **NodeMailer**: For email notification and reset password token. [Nodemailer Documentation](https://nodemailer.com/about/)
 - **cors, dotenv, morgan, and more**: Various utilities for functionality and logging.
 
-![Architecture diagram]( ...........................)
 
-### Key Features
+## 📝 Features
 
 - **User Authentication**: Supports secure user registration and login processes, including password reset options.
 - **Profile Management**: Handles user profile updates including: changing personal data and password, removing an account,  profile picture uploads.
@@ -87,7 +85,7 @@ export const storage = new CloudinaryStorage({
 ```
 
 
-## Getting Started 
+## 👉 Getting Started
 
 To use all BE functionalities on the FE, remember to download the FE from the link and run it according to the instructions provided 
 [go to FE repository](https://github.com/kozerka/meet2learn-FE)
@@ -127,6 +125,8 @@ To use all BE functionalities on the FE, remember to download the FE from the li
     CLOUDINARY_API_SECRET=CLOUDINARY_API_SECRET
     ```
 
+> **Note**: Always keep your API keys confidential. Do not expose them in the client-side code or public repositories.
+
 5. **Run the server:**
   - For development:
     ```
@@ -139,14 +139,28 @@ To use all BE functionalities on the FE, remember to download the FE from the li
 
 
 
-### Conclusion
+## ⭐️ Future Development Plans
+
+The application is set for some exciting updates. Here's what's planned for the future:
+
+- **Introduction of Admin Role**: The backend and routing have been designed to easily add an admin role. This role will bring new levels of management and oversight to the app.
+
+- **Two-Step Verification for Tutor Accounts**: There are plans to add a two-step verification process for tutors. This will help in ensuring that the content they publish is secure and trustworthy.
+
+- **Expanded Dashboard Notifications**: The dashboard will be upgraded to show more notifications. Users will be informed about new posts, comments, messages from tutors, and other important updates.
+
+- **User Engagement Enhancements**: The app will include new features to make it more interactive and engaging. This might include elements like badges for achievements or personalized learning paths.
+
+## 💪 Contributing
+
+If you'd like to contribute, please fork the repository and make changes as you'd like. Pull requests are warmly welcome.
+
+## 💬  Feedback
+
+If you have any feedback or issues, please open an issue in this repository.
 
 
-Application can continually evolving, towards integrating new and useful features. Upcoming enhancements include the introduction of file attachments to posts, allowing for a richer sharing experience. 
-
----
-
-## License
+## ⚠️ License
 
 [MIT](https://choosealicense.com/licenses/mit/)
 
@@ -158,6 +172,13 @@ Created with ❤️ by [kozerka].
 
 &nbsp;
 
+&nbsp;
+
+## 🙏 Special Thanks
+
+A heartfelt thank you to my [Mentor - devmentor.pl](https://devmentor.pl/) for setting forth this challenge.
+
+---
 
 
 
