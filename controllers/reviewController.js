@@ -37,13 +37,32 @@ const addReview = asyncHandler(async (req, res) => {
 
 const getTutorReviews = asyncHandler(async (req, res) => {
 	const tutorId = req.params.tutorId;
-	const reviews = await Review.find({ tutor: tutorId }).populate(
-		'student',
-		'name avatar'
-	);
+	const reviews = await Review.find({ tutor: tutorId })
+		.populate({
+			path: 'student',
+			select: 'name avatar',
+			match: { role: 'student' },
+		})
+		.exec();
+
+	console.log(`Number of reviews found: ${reviews.length}`);
+	reviews.forEach((review) => {
+		console.log('Review:', review);
+	});
+
+	reviews.forEach((review) => {
+		if (review.student) {
+			console.log(
+				`Student Name: ${review.student.name}, Avatar: ${review.student.avatar}`
+			);
+		} else {
+			console.log('No student data available for this review.');
+		}
+	});
 
 	res.json(reviews);
 });
+
 
 const getMyReviews = asyncHandler(async (req, res) => {
 	const studentId = req.user._id;

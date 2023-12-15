@@ -1,0 +1,15 @@
+export const POST_CATEGORIES = {
+	STUDY_BUDDIES: 'study buddies',
+	TUTOR_HELP: 'tutor help',
+	LEARNING_RESOURCES: 'learning resources',
+	ONLINE_CLASSES: 'online classes',
+	ACADEMIC_CHAT: 'academic chat',
+	RESEARCH_PROJECTS: 'research projects',
+	STUDENT_LIFE: 'student life',
+	CLUBS_AND_ACTIVITIES: 'clubs and activities',
+	CAREER_TIPS: 'career tips',
+	INTERNSHIPS: 'internships',
+	SCHOLARSHIPS: 'scholarships',
+	ALUMNI_CONNECTIONS: 'alumni connections',
+	OTHER: 'other',
+};

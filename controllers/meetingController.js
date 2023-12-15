@@ -21,14 +21,17 @@ const createMeeting = asyncHandler(async (req, res) => {
 });
 
 const getAllMeetings = asyncHandler(async (req, res) => {
-	const userId = req.user._id; // ID zalogowanego użytkownika
-
-	// Pobranie wszystkich spotkań, w których użytkownik jest studentem lub tutorem
+	const userId = req.user._id;
 	const meetings = await Meeting.find({
-		$or: [{ tutor: userId }, { student: userId }],
+		$or: [
+			{ tutor: userId, student: userId },
+			{ student: userId },
+			{ tutor: userId },
+		],
 	})
 		.populate('tutor')
 		.populate('student');
+
 
 	res.json(meetings);
 });
@@ -93,7 +96,7 @@ const deleteMeeting = asyncHandler(async (req, res) => {
 	const meetingId = req.params.meetingId;
 	const userId = req.user._id;
 
-	const meeting = await Meeting.findById(meetingId);
+	const meeting = await Meeting.findOneAndDelete(meetingId);
 
 	if (!meeting) {
 		res.status(404);
@@ -101,15 +104,14 @@ const deleteMeeting = asyncHandler(async (req, res) => {
 	}
 
 	if (
-		meeting.tutor._id.toString() !== userId &&
-		meeting.student._id.toString() !== userId
+		meeting.tutor._id.toString() === userId.toString() ||
+		meeting.student._id.toString() === userId.toString()
 	) {
+		res.json({ message: 'Meeting deleted' });
+	} else {
 		res.status(403);
 		throw new Error('Not authorized to delete this meeting');
 	}
-
-	await meeting.remove();
-	res.json({ message: 'Meeting deleted' });
 });
 
 

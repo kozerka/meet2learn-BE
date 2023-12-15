@@ -5,7 +5,7 @@ import {
 	getAllConversations,
 	updateConversation,
 	deleteConversation,
-} from '../controllers/converationController.js';
+} from '../controllers/conversationController.js';
 import auth from '../middlewares/authMiddleware.js';
 const conversationRouter = express.Router({ mergeParams: true });
 

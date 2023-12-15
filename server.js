@@ -15,8 +15,10 @@ import {
 	commentRouter,
 	tutorRouter,
 	reviewRouter,
+	statsRouter,
 } from './routes/index.js';
 import { errorHandler, notFound } from './middlewares/errorMiddleware.js';
+import { getPostCategories } from './controllers/categoriesController.js';
 
 dotenv.config();
 
@@ -24,6 +26,9 @@ const app = express();
 app.use(
 	cors({
 		origin: 'http://localhost:3000',
+		methods: 'GET,HEAD,PUT,PATCH,POST,DELETE',
+		credentials: true,
+		optionsSuccessStatus: 204,
 	})
 );
 app.use(express.json());
@@ -46,6 +51,8 @@ app.use('/api/notes', noteRouter);
 app.use('/api/comments', commentRouter);
 app.use('/api/tutors', tutorRouter);
 app.use('/api/reviews', reviewRouter);
+app.use('/api/stats', statsRouter);
+app.use('/api/categories', getPostCategories);
 
 app.use(notFound);
 app.use(errorHandler);

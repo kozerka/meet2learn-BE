@@ -15,7 +15,7 @@ export const updateTutorRating = async (tutorId) => {
 	]);
 
 	if (updatedRatings.length > 0) {
-		tutor.averageRating = updatedRatings[0].averageRating;
+		tutor.averageRating = Number(updatedRatings[0].averageRating.toFixed(1));
 		tutor.totalRating = updatedRatings[0].totalRating;
 	} else {
 		tutor.averageRating = 0;

@@ -2,6 +2,7 @@ import asyncHandler from 'express-async-handler';
 import User from '../models/User.js';
 import Post from '../models/Post.js';
 
+
 const createPost = asyncHandler(async (req, res) => {
 	const { title, text, category } = req.body;
 	const user = await User.findById(req.user._id).select('-password');
@@ -10,8 +11,6 @@ const createPost = asyncHandler(async (req, res) => {
 		title,
 		text,
 		category,
-		name: user.name,
-		avatar: user.avatar,
 	});
 
 	const post = await newPost.save();
@@ -19,9 +18,19 @@ const createPost = asyncHandler(async (req, res) => {
 });
 
 const getPosts = asyncHandler(async (req, res) => {
-	const posts = await Post.find().sort({ date: -1 });
+	const { category } = req.query;
+	let query = {};
+
+	if (category) {
+		query.category = category;
+	}
+	const posts = await Post.find()
+		.populate('user', 'name firstName lastName avatar')
+		.populate('comments.user', 'name avatar')
+		.sort({ updatedAt: -1, createdAt: -1 });
 	res.json(posts);
 });
+
 const getPostById = asyncHandler(async (req, res) => {
 	const post = await Post.findById(req.params.id);
 
@@ -33,9 +42,14 @@ const getPostById = asyncHandler(async (req, res) => {
 	res.json(post);
 });
 const getPostsByUserId = asyncHandler(async (req, res) => {
-	const posts = await Post.find({ user: req.params.userId });
+	const posts = await Post.find({ user: req.params.userId })
+		.populate('user', 'name firstName lastName avatar')
+		.populate('comments.user', 'name avatar')
+		.sort({ updatedAt: -1, createdAt: -1 });
 	res.json(posts);
 });
+
+
 
 const deletePost = asyncHandler(async (req, res) => {
 	const post = await Post.findById(req.params.id);

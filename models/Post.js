@@ -1,4 +1,5 @@
 import mongoose from 'mongoose';
+import { POST_CATEGORIES } from '../utils/constants/postCategories.js';
 
 const PostSchema = new mongoose.Schema(
 	{
@@ -23,36 +24,8 @@ const PostSchema = new mongoose.Schema(
 			type: String,
 			required: true,
 			maxLength: 100,
-			enum: [
-				'study buddies',
-				'tutor help',
-				'learning resources',
-				'online classes',
-				'academic chat',
-				'research projects',
-				'student life',
-				'clubs and activities',
-				'career tips',
-				'internships',
-				'scholarships',
-				'alumni connections',
-				'other',
-			],
-			default: 'other',
-		},
-		name: {
-			type: String,
-		},
-		firstName: {
-			type: String,
-			required: false,
-		},
-		lastName: {
-			type: String,
-			required: false,
-		},
-		avatar: {
-			type: String,
+			enum: Object.values(POST_CATEGORIES),
+			default: POST_CATEGORIES.OTHER,
 		},
 		likes: [
 			{
@@ -86,6 +59,11 @@ const PostSchema = new mongoose.Schema(
 			{
 				user: {
 					type: mongoose.Schema.Types.ObjectId,
+					ref: 'User',
+					required: true,
+				},
+				name: {
+					type: String,
 				},
 				text: {
 					type: String,

@@ -2,9 +2,12 @@ import asyncHandler from 'express-async-handler';
 import User from '../models/User.js';
 import Tutor from '../models/Tutor.js';
 import generateToken from '../utils/generateToken.js';
+import generatePasswordResetToken from '../utils/generatePasswordResetToken.js';
 import { comparePassword, hashPassword } from '../utils/hashPasswordHelper.js';
+import { resetPasswordService } from '../services/resetPasswordService.js';
+import { registerGreetingService } from '../services/registerGreetingService.js';
+import jwt from 'jsonwebtoken';
 
-//działa
 const loginUser = asyncHandler(async (req, res) => {
 	const { email, password } = req.body;
 
@@ -16,13 +19,14 @@ const loginUser = asyncHandler(async (req, res) => {
 			name: user.name,
 			email: user.email,
 			isAdmin: user.isAdmin,
+			role: user.role,
 		});
 	} else {
 		res.status(401);
 		throw new Error('Invalid email or password');
 	}
 });
-//działa
+
 const registerUser = asyncHandler(async (req, res) => {
 	const { name, email, password, role, ...tutorFields } = req.body;
 
@@ -52,7 +56,7 @@ const registerUser = asyncHandler(async (req, res) => {
 	const createdUser = await user.save();
 
 	if (createdUser) {
-		generateToken(res, createdUser._id);
+		await registerGreetingService(createdUser.email, createdUser.name);
 		res.status(201).json({
 			_id: createdUser._id,
 			name: createdUser.name,
@@ -64,7 +68,7 @@ const registerUser = asyncHandler(async (req, res) => {
 		throw new Error('Invalid user data');
 	}
 });
-//działa
+
 const logoutUser = (req, res) => {
 	res.cookie('jwt', 'logout', {
 		httpOnly: true,
@@ -72,7 +76,7 @@ const logoutUser = (req, res) => {
 	});
 	res.status(200).json({ message: 'Logged out successfully!See you soon!' });
 };
-//działa
+
 const getMe = asyncHandler(async (req, res) => {
 	const user = await User.findById(req.user._id).select('-password');
 	if (!user) {
@@ -88,6 +92,16 @@ const updateUser = asyncHandler(async (req, res) => {
 	if (!user) {
 		res.status(404);
 		throw new Error('User not found');
+	}
+	if (update.email) {
+		const existingUser = await User.findOne({
+			email: update.email,
+			_id: { $ne: userId },
+		});
+		if (existingUser) {
+			res.status(400);
+			throw new Error('Email already exists!');
+		}
 	}
 
 	if (user.role === 'tutor') {
@@ -106,14 +120,11 @@ const updateUser = asyncHandler(async (req, res) => {
 	}
 });
 
-
-//działa
 const getUsers = asyncHandler(async (req, res) => {
 	const users = await User.find({});
 	res.json(users);
 });
 
-//działające
 const deleteUser = asyncHandler(async (req, res) => {
 	const userId = req.user._id;
 	const result = await User.deleteOne({ _id: userId });
@@ -123,7 +134,7 @@ const deleteUser = asyncHandler(async (req, res) => {
 	}
 	res.json({ message: 'User removed' });
 });
-//działa
+
 const changePassword = asyncHandler(async (req, res) => {
 	const userId = req.user._id;
 	const { currentPassword, newPassword } = req.body;
@@ -143,6 +154,69 @@ const changePassword = asyncHandler(async (req, res) => {
 	res.status(200).json({ message: 'Password changed successfully' });
 });
 
+const uploadAvatar = asyncHandler(async (req, res) => {
+	const userId = req.user._id;
+	const user = await User.findById(userId);
+	if (!user) {
+		res.status(404);
+		throw new Error('User not found');
+	}
+	const userFound = await User.findByIdAndUpdate(
+		userId,
+		{ $set: { avatar: req.file.path } },
+		{ new: true }
+	);
+
+	res.status(200).json({ message: 'Avatar uploaded successfully', userFound });
+});
+
+const resetPasswordInitiate = asyncHandler(async (req, res) => {
+	const { email } = req.body;
+	const user = await User.findOne({ email });
+
+	if (!user) {
+		res.status(404);
+		throw new Error('User not found');
+	}
+
+	const token = generatePasswordResetToken(user._id);
+	await resetPasswordService(email, token);
+	res.send('Password reset link has been sent.');
+});
+
+const resetPasswordFinalize = asyncHandler(async (req, res) => {
+	const { token, newPassword } = req.body;
+
+	try {
+		const decoded = jwt.verify(token, process.env.JWT_SECRET);
+		const userId = decoded.userId;
+		const user = await User.findById(userId);
+
+		if (!user) {
+			res.status(404);
+			throw new Error('Invalid token or user does not exist');
+		}
+
+		user.password = await hashPassword(newPassword);
+		await user.save();
+		res.send('Password has been reset successfully.');
+	} catch (error) {
+		console.error('Error resetting password:', error);
+
+		let errorMessage = 'Error occurred during password reset';
+		if (error instanceof jwt.JsonWebTokenError) {
+			if (error.message === 'jwt expired') {
+				errorMessage =
+					'Token has expired. Please initiate the password reset process again.';
+			} else {
+				errorMessage = error.message;
+			}
+		}
+
+		res.status(400).json({ message: errorMessage });
+	}
+});
+
 export {
 	loginUser,
 	registerUser,
@@ -152,4 +226,7 @@ export {
 	getUsers,
 	deleteUser,
 	changePassword,
+	uploadAvatar,
+	resetPasswordInitiate,
+	resetPasswordFinalize,
 };
